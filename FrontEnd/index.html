@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Examen 3 - Notion OAuth</title>
+  <style>
+    body { font-family: sans-serif; max-width: 720px; margin: 2rem auto; line-height: 1.5; }
+    button, input { padding: 0.45rem 0.7rem; margin: 0.25rem 0; }
+    pre { background: #f4f4f4; padding: 1rem; border-radius: 6px; overflow-x: auto; }
+    .box { border: 1px solid #ddd; padding: 1rem; border-radius: 8px; margin-bottom: 1rem; }
+  </style>
+</head>
+<body>
+  <h1>Cliente Notion OAuth (.NET)</h1>
+
+  <div class="box">
+    <button id="btnLogin">Login con Notion</button>
+    <button id="btnLogout">Logout</button>
+    <div id="estadoSesion">Cargando estado...</div>
+  </div>
+
+  <div class="box">
+    <h3>Probar POST protegido (Crear nota en Notion)</h3>
+    <input id="txtTitulo" type="text" placeholder="Título de la nota" />
+    <input id="txtContenido" type="text" placeholder="Contenido" />
+    <button id="btnPost">Enviar POST</button>
+  </div>
+
+  <div class="box">
+    <h3>Probar GET protegido (Listar páginas en Notion)</h3>
+    <button id="btnGet">Consultar GET</button>
+  </div>
+
+  <h3>Respuesta del backend</h3>
+  <pre id="salida">Sin peticiones aún.</pre>
+
+  <script>
+    const API = "http://localhost:5170/api";
+    const salida = document.getElementById("salida");
+    const estadoSesion = document.getElementById("estadoSesion");
+
+    const mostrar = (data) => {
+      salida.textContent = typeof data === "string" ? data : JSON.stringify(data, null, 2);
+    };
+
+    async function cargarSesion() {
+      const res = await fetch(`${API}/AuthNotion/me`, { credentials: "include" });
+      if (!res.ok) {
+        estadoSesion.innerHTML = "<strong>Estado:</strong> No autenticado";
+        return;
+      }
+      const data = await res.json();
+      estadoSesion.innerHTML = `
+        <strong>Estado:</strong> Autenticado<br/>
+        <strong>Usuario:</strong> ${data.userName} ${data.email ? `(${data.email})` : ""}<br/>
+        <strong>Proveedor:</strong> ${data.provider}
+      `;
+    }
+
+    document.getElementById("btnLogin").onclick = () => {
+      window.location.href = `${API}/AuthNotion/login`;
+    };
+
+    document.getElementById("btnLogout").onclick = async () => {
+      const res = await fetch(`${API}/AuthNotion/logout`, {
+        method: "POST",
+        credentials: "include"
+      });
+      mostrar(await res.json());
+      await cargarSesion();
+    };
+
+    document.getElementById("btnPost").onclick = async () => {
+      const payload = {
+        titulo: document.getElementById("txtTitulo").value || "Nota desde examen",
+        contenido: document.getElementById("txtContenido").value || "Creada con HttpClient y sesión Notion"
+      };
+      const res = await fetch(`${API}/NotasNotion`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify(payload)
+      });
+      const text = await res.text();
+      mostrar({ status: res.status, body: text });
+    };
+
+    document.getElementById("btnGet").onclick = async () => {
+      const res = await fetch(`${API}/NotasNotion`, {
+        credentials: "include"
+      });
+      const text = await res.text();
+      mostrar({ status: res.status, body: text });
+    };
+
+    cargarSesion();
+  </script>
+</body>
+</html>
