@@ -1,0 +1,8 @@
+# Resultados de compilación
+bin/
+obj/
+
+# Credenciales y configuración local
+secrets.json
+appsettings.Development.json
+*.user
