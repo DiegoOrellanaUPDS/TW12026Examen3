@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="Examen3.Epic/Examen3.Epic.csproj" />
+  <Project Path="Examen3.Epic.Tests/Examen3.Epic.Tests.csproj" />
+</Solution>

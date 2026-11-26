@@ -1,0 +1,14 @@
+# Datos locales del proyecto (no se versionan)
+App_Data/
+appsettings.Local.json
+.env
+
+# Secretos y configuración local
+*.user
+*.suo
+
+# Artefactos de compilación y pruebas
+bin/
+obj/
+TestResults/
+.vs/
