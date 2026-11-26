@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Epic Games Auth</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            max-width: 480px;
+            margin: 48px auto;
+            padding: 0 16px;
+            background: #f5f5f5;
+            color: #1f2937;
+        }
+        .card {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 24px;
+        }
+        h1 {
+            font-size: 1.25rem;
+            margin-top: 0;
+        }
+        .actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+        button, a.btn {
+            display: inline-block;
+            padding: 8px 14px;
+            border-radius: 6px;
+            border: 1px solid #d1d5db;
+            background: #ffffff;
+            color: #111827;
+            font-size: 0.9rem;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        a.btn-epic {
+            background: #111827;
+            color: #ffffff;
+            border-color: #111827;
+        }
+        button:hover, a.btn:hover {
+            opacity: 0.9;
+        }
+        #status-box {
+            padding: 14px;
+            border-radius: 6px;
+            border: 1px solid #d1d5db;
+            background: #f9fafb;
+            margin-bottom: 12px;
+        }
+        #status-box.authenticated {
+            background: #ecfdf5;
+            border-color: #10b981;
+            color: #065f46;
+        }
+        #status-box.unauthenticated {
+            background: #fef2f2;
+            border-color: #ef4444;
+            color: #991b1b;
+        }
+        #status-detail {
+            font-size: 0.85rem;
+            margin-top: 4px;
+        }
+    </style>
+</head>
+<body>
+    <main class="card">
+        <h1>Autenticación con Epic Games</h1>
+
+        <div class="actions">
+            <a id="login-link" class="btn btn-epic" href="http://localhost:5170/api/oauth/epic/login">Login with Epic</a>
+            <button id="logout-btn" type="button">Logout</button>
+        </div>
+
+        <div id="status-box" aria-live="polite">
+            <strong id="status-title">Comprobando estado...</strong>
+            <div id="status-detail"></div>
+        </div>
+
+        <button id="refresh-btn" type="button">Actualizar estado</button>
+    </main>
+
+    <script>
+        const API_BASE = window.location.origin === "http://localhost:5170"
+            ? ""
+            : "http://localhost:5170";
+
+        const statusBox = document.getElementById("status-box");
+        const statusTitle = document.getElementById("status-title");
+        const statusDetail = document.getElementById("status-detail");
+        const refreshBtn = document.getElementById("refresh-btn");
+        const logoutBtn = document.getElementById("logout-btn");
+        const loginLink = document.getElementById("login-link");
+
+        loginLink.href = `${API_BASE}/api/oauth/epic/login?returnUrl=${encodeURIComponent(window.location.href)}`;
+
+        async function refreshStatus() {
+            refreshBtn.disabled = true;
+            statusTitle.textContent = "Actualizando...";
+            statusDetail.textContent = "";
+
+            try {
+                const response = await fetch(`${API_BASE}/api/auth/status`, {
+                    method: "GET",
+                    credentials: "include",
+                    cache: "no-store"
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Error HTTP ${response.status}`);
+                }
+
+                const data = await response.json();
+                const checkedAt = new Date().toLocaleTimeString();
+                statusBox.classList.remove("authenticated", "unauthenticated");
+
+                if (data.isAuthenticated) {
+                    statusBox.classList.add("authenticated");
+                    statusTitle.textContent = "Autenticado";
+                    const expiry = data.expiresAt
+                        ? ` Expira: ${new Date(data.expiresAt).toLocaleString()}.`
+                        : "";
+                    statusDetail.textContent = `${data.message}${expiry} (Actualizado: ${checkedAt})`;
+                } else {
+                    statusBox.classList.add("unauthenticated");
+                    statusTitle.textContent = "No autenticado";
+                    const hostHint = window.location.hostname === "127.0.0.1"
+                        ? " Si ya iniciaste sesión, abre http://localhost:5170/ o http://localhost:5500/FE/index.html para compartir la cookie de sesión."
+                        : "";
+                    statusDetail.textContent = `${data.message || ""}${hostHint} (Actualizado: ${checkedAt})`;
+                }
+            } catch (error) {
+                statusBox.classList.remove("authenticated", "unauthenticated");
+                statusTitle.textContent = "Error al consultar estado";
+                statusDetail.textContent = error.message;
+            } finally {
+                refreshBtn.disabled = false;
+            }
+        }
+
+        async function logout() {
+            try {
+                await fetch(`${API_BASE}/api/oauth/epic/logout`, {
+                    method: "POST",
+                    credentials: "include"
+                });
+            } finally {
+                await refreshStatus();
+            }
+        }
+
+        refreshBtn.addEventListener("click", refreshStatus);
+        logoutBtn.addEventListener("click", logout);
+        document.addEventListener("DOMContentLoaded", refreshStatus);
+    </script>
+</body>
+</html>
