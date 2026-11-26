@@ -1,0 +1,128 @@
+:root {
+    --celeste: #17a2c8;
+    --celeste-claro: #e7f7fb;
+    --texto: #21404a;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    background: linear-gradient(160deg, var(--celeste-claro), #ffffff 60%);
+    color: var(--texto);
+}
+
+.contenedor {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 32px 20px 48px;
+}
+
+.cabecera {
+    text-align: center;
+    margin-bottom: 24px;
+}
+
+h1 {
+    color: var(--celeste);
+    margin-bottom: 8px;
+}
+
+.tarjeta {
+    background: #ffffff;
+    border: 1px solid #cfeaf1;
+    border-radius: 14px;
+    padding: 20px 24px;
+    margin-bottom: 18px;
+    box-shadow: 0 6px 18px rgba(23, 162, 200, 0.08);
+}
+
+h2 {
+    color: var(--celeste);
+    font-size: 1.1rem;
+    margin-top: 0;
+}
+
+.acciones {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 14px;
+}
+
+button {
+    background: var(--celeste);
+    color: #ffffff;
+    border: 0;
+    border-radius: 8px;
+    padding: 10px 16px;
+    font-size: 0.95rem;
+    cursor: pointer;
+}
+
+button:hover {
+    filter: brightness(0.95);
+}
+
+button.secundario {
+    background: #ffffff;
+    color: var(--celeste);
+    border: 1px solid var(--celeste);
+}
+
+label {
+    display: block;
+    font-weight: 600;
+    margin: 12px 0 4px;
+}
+
+input,
+textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #bfe4ee;
+    border-radius: 8px;
+    font: inherit;
+    background: #f7fdff;
+}
+
+.datos {
+    display: grid;
+    grid-template-columns: 130px 1fr;
+    gap: 6px 12px;
+    margin: 0;
+}
+
+.datos dt {
+    font-weight: 600;
+    color: #4c7d8a;
+}
+
+.datos dd {
+    margin: 0;
+    word-break: break-all;
+}
+
+.mensaje {
+    min-height: 1.2em;
+    margin: 12px 0 0;
+    color: #b23a48;
+}
+
+.mensaje.ok {
+    color: #1a8b6a;
+}
+
+pre {
+    background: #f2fbfd;
+    border-radius: 8px;
+    padding: 12px;
+    min-height: 40px;
+    white-space: pre-wrap;
+    word-break: break-word;
+    margin: 0;
+}

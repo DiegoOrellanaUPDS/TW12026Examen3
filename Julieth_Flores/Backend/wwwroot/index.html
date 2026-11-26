@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Autenticación con Vimeo</title>
+    <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+    <main class="contenedor">
+        <header class="cabecera">
+            <h1>Autenticación con Vimeo</h1>
+            <p>Inicia sesión para registrar tus títulos y descripciones.</p>
+            <div class="acciones">
+                <button id="btnLogin" type="button">Iniciar sesión con Vimeo</button>
+                <button id="btnLogout" type="button" class="secundario">Cerrar sesión</button>
+            </div>
+        </header>
+
+        <section class="tarjeta">
+            <h2>Usuario autenticado</h2>
+            <dl class="datos">
+                <dt>Nombre</dt>
+                <dd id="nombre">—</dd>
+                <dt>Identificador</dt>
+                <dd id="identificador">—</dd>
+                <dt>Proveedor</dt>
+                <dd id="proveedor">—</dd>
+            </dl>
+            <p id="mensaje" class="mensaje" role="status"></p>
+        </section>
+
+        <section class="tarjeta">
+            <h2>Nuevo registro</h2>
+            <label for="titulo">Título</label>
+            <input id="titulo" type="text" placeholder="Escribe un título" />
+
+            <label for="descripcion">Descripción</label>
+            <textarea id="descripcion" rows="3" placeholder="Escribe una descripción"></textarea>
+
+            <div class="acciones">
+                <button id="btnRegistrar" type="button">Registrar</button>
+                <button id="btnVer" type="button" class="secundario">Ver registros</button>
+            </div>
+        </section>
+
+        <section class="tarjeta">
+            <h2>Resultados</h2>
+            <pre id="resultados">Sin registros todavía.</pre>
+        </section>
+    </main>
+
+    <script src="/app.js"></script>
+</body>
+</html>
