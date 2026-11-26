@@ -1,10 +1,11 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>Examen_3</RootNamespace>
+    <UserSecretsId>49e576a1-7a22-4a79-937a-c3bf17489952</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
