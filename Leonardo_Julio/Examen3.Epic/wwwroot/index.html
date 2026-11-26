@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Examen 3: login OAuth con Epic Games, sesión validada en el servidor y endpoints protegidos.">
+  <title>Examen 3 · Epic Games OAuth</title>
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <div class="ambient ambient-one" aria-hidden="true"></div>
+  <div class="ambient ambient-two" aria-hidden="true"></div>
+
+  <header class="topbar">
+    <a class="brand" href="/">
+      <span class="brand-mark">E3</span>
+      <span class="brand-text">
+        <strong>Examen 3</strong>
+        <small>Epic Games OAuth</small>
+      </span>
+    </a>
+    <span class="badge badge-provider">Epic Games</span>
+  </header>
+
+  <main class="layout">
+    <section class="card auth-card" aria-labelledby="authTitle">
+      <div class="card-heading">
+        <p class="eyebrow">Autenticación</p>
+        <h1 id="authTitle">Sesión con Epic Games</h1>
+        <p class="muted">
+          El código OAuth se intercambia en el servidor. El navegador solo recibe una cookie
+          HttpOnly con el identificador de la sesión.
+        </p>
+      </div>
+
+      <div id="anonymousPanel" class="panel">
+        <div class="provider-lockup">
+          <span class="provider-mark" aria-hidden="true">EPIC</span>
+          <div>
+            <strong>Epic Games</strong>
+            <small>OAuth 2.0 · basic_profile</small>
+          </div>
+        </div>
+
+        <a id="loginButton" class="button button-primary button-wide" href="/api/auth/epic/login">
+          Iniciar sesión con Epic Games
+        </a>
+
+        <p id="setupNotice" class="notice notice-warning" hidden></p>
+
+        <p class="fine-print">
+          Serás redirigido a epicgames.com. La aplicación nunca ve tu contraseña ni guarda tu
+          access token en el navegador.
+        </p>
+      </div>
+
+      <div id="authenticatedPanel" class="panel" hidden>
+        <div class="user-row">
+          <div class="avatar-wrap">
+            <img id="avatar" class="avatar" alt="Avatar de Epic Games" hidden>
+            <span id="avatarFallback" class="avatar avatar-fallback" aria-hidden="true">?</span>
+          </div>
+          <div class="user-meta">
+            <strong id="displayName">—</strong>
+            <span id="preferredUsername" class="muted"></span>
+            <span id="accountId" class="mono muted"></span>
+          </div>
+        </div>
+
+        <div class="session-status">
+          <span class="dot" aria-hidden="true"></span>
+          <span>Sesión validada en el servidor</span>
+          <span id="sessionProvider" class="chip">Epic Games</span>
+        </div>
+
+        <button id="logoutButton" class="button button-secondary button-wide" type="button">
+          Cerrar sesión
+        </button>
+      </div>
+    </section>
+
+    <section class="card playground" aria-labelledby="playgroundTitle">
+      <div class="card-heading">
+        <p class="eyebrow">API protegida</p>
+        <h2 id="playgroundTitle">Prueba POST y GET</h2>
+        <p class="muted">
+          Ambos endpoints exigen una sesión creada con Epic Games. Sin sesión responden 401.
+        </p>
+      </div>
+
+      <label class="field-label" for="noteText">
+        Texto de la nota
+        <span id="charCount" class="char-count">0/500</span>
+      </label>
+      <textarea id="noteText" class="input" maxlength="500" rows="3"
+                placeholder="Escribe una nota para probar POST /api/notes..."></textarea>
+
+      <div class="actions">
+        <button id="postButton" class="button button-primary" type="button">POST /api/notes</button>
+        <button id="getButton" class="button button-secondary" type="button">GET /api/notes</button>
+        <button id="meButton" class="button button-ghost" type="button">GET /api/auth/me</button>
+        <button id="noCookieButton" class="button button-ghost" type="button"
+                title="Envía la petición sin la cookie de sesión">GET sin cookie</button>
+      </div>
+
+      <div class="response-head">
+        <h3>Respuesta</h3>
+        <span id="statusBadge" class="status-badge" hidden></span>
+      </div>
+      <pre id="responseOutput" class="response" aria-live="polite">Aún no hay peticiones. Inicia sesión y prueba los botones.</pre>
+
+      <div class="notes-head">
+        <h3>Notas guardadas</h3>
+        <span id="notesCount" class="muted"></span>
+      </div>
+      <ul id="notesList" class="notes-list">
+        <li class="empty">Sin notas todavía.</li>
+      </ul>
+    </section>
+  </main>
+
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+
+  <footer class="footer">
+    <span>Examen 3 · Leonardo Julio</span>
+    <span class="mono">/api/auth/epic/login · /api/notes</span>
+  </footer>
+</body>
+</html>
