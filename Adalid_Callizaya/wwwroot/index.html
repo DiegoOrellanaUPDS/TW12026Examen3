@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Examen 3 | Steam</title><link rel="stylesheet" href="style.css"><script src="app.js" defer></script>
+</head>
+<body><main>
+<header><span>TECNOLOGÍA WEB I · OPCIÓN C</span><h1>Acceso con Steam</h1><p>Adalid Callizaya · Examen 3</p></header>
+<section><h2>Sesión de usuario</h2><p id="sesion" aria-live="polite">Comprobando sesión…</p><div class="acciones"><a class="boton" href="/auth/login">Iniciar sesión con Steam</a><button id="logout" class="secundario">Cerrar sesión</button><button id="refresh" class="secundario">Ver sesión</button></div></section>
+<section><h2>Registros protegidos</h2><p>Prueba las operaciones con o sin sesión. La autorización se comprueba en el servidor.</p><form id="form"><label for="texto">Dato a registrar</label><input id="texto" maxlength="200" placeholder="Ej. Prueba del examen" required><div class="acciones"><button type="submit">POST · Guardar</button><button id="get" type="button" class="secundario">GET · Consultar</button></div></form></section>
+<section><h2>Respuesta del servidor</h2><pre id="respuesta" aria-live="polite">Selecciona una operación.</pre></section>
+<footer>ASP.NET Core · OpenID 2.0 · Autorización en backend</footer>
+</main></body></html>
