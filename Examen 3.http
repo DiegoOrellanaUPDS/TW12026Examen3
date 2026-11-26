@@ -1,6 +1,43 @@
-@Examen_3_HostAddress = http://localhost:5170
+@Examen_3_HostAddress = https://localhost:7010
 
-GET {{Examen_3_HostAddress}}/weatherforecast/
+### Obtener usuarios
+GET {{Examen_3_HostAddress}}/api/usuarios
 Accept: application/json
 
 ###
+
+### Obtener usuario por ID
+GET {{Examen_3_HostAddress}}/api/usuarios/1
+Accept: application/json
+
+###
+
+### Crear usuario
+POST {{Examen_3_HostAddress}}/api/usuarios
+Content-Type: application/json
+
+{
+  "nombre": "Ada Lovelace",
+  "correo": "ada@example.com"
+}
+
+###
+
+### Iniciar autorización de Epic Games (abrir la URL de redirección)
+GET {{Examen_3_HostAddress}}/api/oauth/epic/login
+
+###
+
+### Consultar autorización en la sesión actual
+GET {{Examen_3_HostAddress}}/api/oauth/epic/authorization
+Accept: application/json
+
+###
+
+### Cerrar sesión de Epic Games
+POST {{Examen_3_HostAddress}}/api/oauth/epic/logout
+
+###
+
+### Callback de Epic Games (normalmente lo invoca Epic Games)
+GET {{Examen_3_HostAddress}}/api/oauth/epic/callback?code=authorization_code&state=state_from_login

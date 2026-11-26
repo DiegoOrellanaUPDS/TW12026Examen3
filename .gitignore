@@ -1,5 +1,7 @@
 **/Migrations/
 **/appsettings.json/
+.env
+!.env.example
 
 # Created by https://www.toptal.com/developers/gitignore/api/aspnetcore
 # Edit at https://www.toptal.com/developers/gitignore?templates=aspnetcore
