@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Examen 3 - Autenticación Kick</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <main class="container">
+        <h1>Autenticación con Kick</h1>
+        <p class="subtitle">Examen 3 - Tecnología Web I</p>
+
+        <section class="panel">
+            <h2>Sesión de usuario</h2>
+            <p id="status">Comprobando sesión...</p>
+            <div class="buttons">
+                <button id="loginBtn">Iniciar sesión con Kick</button>
+                <button id="logoutBtn" class="secondary" hidden>Cerrar sesión</button>
+            </div>
+            <div id="userInfo"></div>
+        </section>
+
+        <section class="panel">
+            <h2>Operaciones protegidas</h2>
+            <button id="getBtn">Probar GET</button>
+            <div class="post-row">
+                <input id="messageInput" type="text" placeholder="Mensaje para enviar">
+                <button id="postBtn">Probar POST</button>
+            </div>
+            <pre id="result">Aquí aparecerán las respuestas del servidor.</pre>
+        </section>
+    </main>
+    <script src="/js/app.js"></script>
+</body>
+</html>
