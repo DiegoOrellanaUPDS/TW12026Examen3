@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Ovidio Sulca - Steam</title>
+</head>
+<body>
+    <h1>Autenticación con Steam</h1>
+    <p>Ovidio Alvaro Sulca Vaca — Examen 3</p>
+    <button id="login" onclick="location.href='/auth/steam/login'">Ingresar con Steam</button>
+    <p id="estado">Comprobando sesión...</p>
+    <button id="logout" hidden>Cerrar sesión</button>
+    <h2>Mensajes protegidos por Steam</h2>
+    <p>Los mensajes se conservan en memoria hasta reiniciar la aplicación.</p>
+    <form id="formulario">
+        <label for="texto">Mensaje:</label>
+        <input id="texto" name="texto" maxlength="200" required>
+        <button type="submit">Registrar mensaje (POST)</button>
+    </form>
+    <button id="consultar">Consultar mensajes (GET)</button>
+    <pre id="resultado" aria-live="polite"></pre>
+    <script>
+        const estado = document.getElementById('estado');
+        const login = document.getElementById('login');
+        const logout = document.getElementById('logout');
+        const resultado = document.getElementById('resultado');
+        let csrfToken;
+
+        async function cargarSesion() {
+            try {
+                const respuesta = await fetch('/auth/steam/me', { cache: 'no-store' });
+                if (respuesta.status === 401) {
+                    csrfToken = undefined;
+                    estado.textContent = 'Sin sesión iniciada.';
+                    login.hidden = false;
+                    logout.hidden = true;
+                    return;
+                }
+                if (!respuesta.ok) throw new Error(`Error de sesión: ${respuesta.status}`);
+                const usuario = await respuesta.json();
+                csrfToken = usuario.csrfToken;
+                estado.textContent = `Identidad: ${usuario.identity} | SteamID64: ${usuario.steamId64} | Proveedor: ${usuario.provider}`;
+                login.hidden = true;
+                logout.hidden = false;
+            } catch (error) {
+                estado.textContent = error.message;
+            }
+        }
+
+        logout.onclick = async () => {
+            try {
+                const respuesta = await fetch('/auth/steam/logout', {
+                    method: 'POST',
+                    headers: { 'X-CSRF-TOKEN': csrfToken }
+                });
+                if (!respuesta.ok) throw new Error(`Error al cerrar sesión: ${respuesta.status}`);
+                resultado.textContent = '';
+                await cargarSesion();
+            } catch (error) {
+                estado.textContent = error.message;
+            }
+        };
+
+        async function mostrarRespuesta(respuesta) {
+            if (respuesta.status === 401 || respuesta.status === 403) {
+                resultado.textContent = `Acceso denegado (${respuesta.status}). Inicia sesión con Steam.`;
+                return;
+            }
+            const texto = await respuesta.text();
+            resultado.textContent = `HTTP ${respuesta.status}: ${texto}`;
+        }
+
+        document.getElementById('formulario').onsubmit = async evento => {
+            evento.preventDefault();
+            try {
+                const respuesta = await fetch('/api/mensajes', {
+                    method: 'POST',
+                    headers: csrfToken ? { 'X-CSRF-TOKEN': csrfToken } : {},
+                    body: new FormData(evento.target)
+                });
+                await mostrarRespuesta(respuesta);
+            } catch (error) {
+                resultado.textContent = error.message;
+            }
+        };
+        document.getElementById('consultar').onclick = async () => {
+            try {
+                await mostrarRespuesta(await fetch('/api/mensajes', { cache: 'no-store' }));
+            } catch (error) {
+                resultado.textContent = error.message;
+            }
+        };
+        cargarSesion();
+    </script>
+</body>
+</html>
